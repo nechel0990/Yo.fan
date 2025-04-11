@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yo.Fan View Booster</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .frame-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    iframe {
+      width: 1px;
+      height: 1px;
+      border: none;
+      visibility: hidden;
+    }
+    .counter {
+      font-size: 16px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Yo.Fan Photo View Booster</h2>
+
+  <label>Enter Yo.Fan Photo Links (one per line):</label>
+  <textarea id="links" rows="6" placeholder="https://yo.fan/p/your-link-here"></textarea>
+
+  <label>How many views per link at a time?</label>
+  <input type="number" id="viewsPerLink" min="1" value="5">
+
+  <button onclick="startBoosting()">Start Boosting Views</button>
+
+  <div class="counter" id="viewCount">Total views simulated: 0</div>
+
+  <div class="frame-container" id="frames"></div>
+
+  <script>
+    let totalViews = 0;
+
+    function startBoosting() {
+      const links = document.getElementById('links').value.trim().split('\n').filter(link => link);
+      const viewsPerLink = parseInt(document.getElementById('viewsPerLink').value);
+      const container = document.getElementById('frames');
+      container.innerHTML = '';
+
+      links.forEach(link => {
+        for (let i = 0; i < viewsPerLink; i++) {
+          const iframe = document.createElement('iframe');
+          iframe.src = link;
+          container.appendChild(iframe);
+          totalViews++;
+        }
+      });
+
+      updateCounter();
+
+      // Refresh frames every 3-5 minutes
+      setInterval(() => {
+        const frames = document.querySelectorAll('iframe');
+        frames.forEach(frame => {
+          frame.src = frame.src; // simple refresh
+          totalViews++;
+        });
+        updateCounter();
+      }, 1000 * (180 + Math.floor(Math.random() * 120))); // 3 to 5 minutes
+    }
+
+    function updateCounter() {
+      document.getElementById('viewCount').innerText = `Total views simulated: ${totalViews}`;
+    }
+  </script>
+
+</body>
+</html>
